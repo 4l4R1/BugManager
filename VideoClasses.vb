@@ -55,7 +55,7 @@ Module VideoClasses
             End If
 
             Dim fNs As New List(Of String)
-            Dim exts As New List(Of String) From {".png", ".tga"} ', ".tif", ".tiff"}
+            Dim exts As New List(Of String) From {".png", ".tga", ".tif", ".tiff"}
             For Each f As FileInfo In dInfo.GetFiles
                 If exts.Contains(f.Extension.ToLower) Then
                     fNs.Add(f.Name)

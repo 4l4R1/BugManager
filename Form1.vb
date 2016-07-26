@@ -28,9 +28,9 @@ Public Class Form1
          .dirResVid = "E:\_home_\doc\Saated\eetrigraafika\Kanal 2\_renders\",
          .GuideFn = "\\INCA2\eetrigraafika\kanal2\guide\kanal2.xml",
          .PlanLocalFn = "E:\Eetrigraafika\Kanal2\bugHD\planTest.xml",
-         .PlanFn = "E:\Eetrigraafika\Kanal2\bugHD\plan.xml",
+         .PlanFn = "E:\Caspar\Eetrigraafika\Kanal2\bugHD\plan.xml",
          .DirLocalBug = "E:\Eetrigraafika\Kanal2\bugHD\",
-         .DirBug = "\\K2-ALARI\EetrigraafikaX\Kanal2\bug\",
+         .DirBug = "E:\Caspar\Eetrigraafika\Kanal2\bugHD\",
          .defVideoStyle = "left", .HD = True}
 
         Setup.Add(ch)
@@ -67,9 +67,9 @@ Public Class Form1
         .dirResVid = "E:\_home_\doc\Saated\eetrigraafika\Kanal 12\_renders\",
         .GuideFn = "\\INCA2\eetrigraafika\kanal12\guide\kanal12.xml",
         .PlanLocalFn = "E:\Eetrigraafika\Kanal2\bugHD\planTest.xml",
-        .PlanFn = "E:\Caspar\Eetrigraafika\Kanal12\bugHD\plan.xml",
+        .PlanFn = "\\CASPAR_K12-HP\Caspar\Eetrigraafika\Kanal12\bugHD\plan.xml",
         .DirLocalBug = "E:\Caspar\Eetrigraafika\Kanal12\bugHD\",
-        .DirBug = "E:\Caspar\Server\media\kanal12\bugHD\",
+        .DirBug = "\\CASPAR_K12-HP\Caspar\Eetrigraafika\Kanal12\bugHD\",
         .defVideoStyle = "right", .HD = True}
 
         Setup.Add(ch)
@@ -261,7 +261,9 @@ Public Class Form1
     End Sub
 
     Private Sub MoveBackupfile(fn As String, fn2 As String)
-        If File.Exists(fn2) Then File.Move(fn2, fn2.Replace(ActiveChannel.Ext, Now.ToString("_MMdd_HHmmss") + ActiveChannel.Ext))
+        Dim fi2 As New FileInfo(fn2)
+        'If File.Exists(fn2) Then File.Move(fn2, fn2.Replace(ActiveChannel.Ext, Now.ToString("_MMdd_HHmmss") + ActiveChannel.Ext))
+        If fi2.Exists Then fi2.MoveTo(fn2.Replace(fi2.Extension, Now.ToString("_MMdd_HHmmss") + fi2.Extension))
         If File.Exists(fn) Then File.Move(fn, fn2)
     End Sub
 
@@ -510,9 +512,16 @@ Public Class Form1
                 MakeHDMov(dirFrames)
             ElseIf rSk.Checked Then
                 Dim hdSk As New VideoSequenceHD(dirFrames, False)
-                hdSk.Proccess(String.Empty)
+                If dirFrames.Contains("matte") Then
+                    hdSk.Proccess("matte")
+                Else
+                    hdSk.Proccess(String.Empty)
+                End If
+
             ElseIf rK2.Checked Then
                 IdentFiles_K2_15(dirFrames)
+            ElseIf rK11.Checked Then
+                IdentFiles_K11_15(dirFrames)
             Else
                 MakeLogoHD(dirFrames)
             End If
@@ -682,16 +691,29 @@ Public Class Form1
 
     Private Sub MakeLogoHD(dirFrames As String)
         Dim videoHD As VideoSequenceHD
+
+        Dim fn As String = dirFrames + "\maskdiff.png"
+        Dim matteMode As String = String.Empty
+
+        If Not File.Exists(fn) Then fn = New DirectoryInfo(dirFrames).Parent.FullName + "\maskdiff.png"
+        If File.Exists(fn) Then
+            matteMode = "mask"
+            FrameProcessorHD_Mask.SetMask(fn)
+        End If
+        Dim mode As String
+
         If dirFrames.EndsWith("all") Then
             For Each d As DirectoryInfo In New DirectoryInfo(dirFrames).GetDirectories
                 videoHD = New VideoSequenceHD(d.FullName, False, VideoSequenceHD.RenderMode.logo, chk169only.Checked) 'chk169only = interlaced
-                videoHD.Proccess(String.Empty)
+                mode = If(d.Name.Contains("matte"), matteMode, String.Empty)
+                videoHD.Proccess(mode)
             Next
             Return
         End If
 
         videoHD = New VideoSequenceHD(dirFrames, False, VideoSequenceHD.RenderMode.logo, chk169only.Checked) 'chk169only = interlaced
-        videoHD.Proccess(String.Empty)
+        mode = If(dirFrames.Contains("matte"), matteMode, String.Empty)
+        videoHD.Proccess(mode)
     End Sub
 
 
@@ -912,6 +934,10 @@ Public Class Form1
                 j += 1
             Next
         End If
+        MakeLogoHD(dir)
+    End Sub
+
+    Private Sub IdentFiles_K11_15(dir As String)
         MakeLogoHD(dir)
     End Sub
 
@@ -1192,9 +1218,14 @@ Public Class Form1
             rSk.Checked = True
         ElseIf tDir.Text.ToLower.Contains("\2ident") Then
             rK2.Checked = True
+        ElseIf tDir.Text.ToLower.Contains("\11ident") Then
+            rK11.Checked = True
         Else
             rEtc.Checked = True
         End If
     End Sub
 
+    Private Sub rSk_CheckedChanged(sender As Object, e As EventArgs) Handles rSk.CheckedChanged
+
+    End Sub
 End Class

@@ -87,7 +87,7 @@ Module VideoClassesHD
             DirHome = src
             dInfo = New DirectoryInfo(DirHome)
             'VideoName = dInfo.Parent.FullName + "\2-15-sk-" + dInfo.Name.ToLower
-            VideoName = ActiveChannel.dirResVid + "\2-15-sk-" + dInfo.Name.ToLower
+            VideoName = ActiveChannel.dirResVid + "\" + dInfo.Name.ToLower
             DirHD = src + "hd\"
 
             Cleanup()
@@ -346,6 +346,10 @@ Module VideoClassesHD
                     '    processor = New FrameProcessor_mask_169_cut(ids(1), ids(3), maskfn)
                 Case "draw"
                     processor = New FrameProcessorHD_Draw(ids)
+                Case "matte"
+                    processor = New FrameProcessorHD_Matte()
+                Case "mask"
+                    processor = New FrameProcessorHD_Mask()
                 Case Else
                     processor = New FrameProcessorHD_Full()
             End Select
@@ -404,7 +408,7 @@ Module VideoClassesHD
             bb.Dispose()
         End Sub
 
-        Protected Function Resize(b As Bitmap, s As Size) As Bitmap
+        Protected Shared Function Resize(b As Bitmap, s As Size) As Bitmap
             Dim b2 As New Bitmap(b, s)
             b.Dispose()
             Return b2
@@ -477,6 +481,105 @@ Module VideoClassesHD
             Example(bHD, ifn.Index)
 
             bHD.Dispose()
+        End Sub
+    End Class
+
+    Friend Class FrameProcessorHD_Mask
+        Inherits FrameProcessorHD
+
+        'Private Shared bmask As Bitmap
+        Private Shared mFn As String
+        Friend Shared Sub SetMask(maskFn As String)
+            mFn = maskFn
+
+        End Sub
+
+        Friend Sub New()
+            MyBase.New("")
+        End Sub
+
+        Friend Overrides Sub Proccess(ifn As IndexedFile)
+            Dim bHD As Bitmap = GetBitmap(ifn) ' New Bitmap(Parent.Dir + fn)
+            bHD.SetResolution(96, 96)
+
+            If bHD.Width <> sizeHD.Width OrElse bHD.Height <> sizeHD.Height Then bHD = Resize(bHD, sizeHD)
+            Dim bsave As New Bitmap(sizeHD.Width, sizeHD.Height, Imaging.PixelFormat.Format24bppRgb)
+            bsave.SetResolution(96, 96)
+            MakeMask(bHD, bsave)
+            'Dim bSave As Bitmap = bHD.Clone(New Rectangle(New Point(0, 0), sizeHD), Imaging.PixelFormat.Format24bppRgb)
+            bsave.SetResolution(96, 96)
+            bsave.Save(Parent.DirHD + ifn.Name)
+            'TargaFile.SaveAsTarga(Parent.DirHD + ifn.Name.ToLower.Replace(".png", ".tga"), bHD)
+            'TargaFile.SaveAsTarga($"{Parent.DirHD}fr{ifn.Index:00000}.tga", bSave)
+
+            bsave = Resize(bsave, sizePal) '720x576
+            Example(bsave, ifn.Index)
+
+            bHD.Dispose()
+            bsave.Dispose()
+        End Sub
+
+        Private Sub MakeMask(bIn As Bitmap, bOut As Bitmap)
+            Dim bmask = New Bitmap(mFn)
+            bmask.SetResolution(96, 96)
+            If bmask.Width <> sizeHD.Width OrElse bmask.Height <> sizeHD.Height Then bmask = Resize(bmask, sizeHD)
+
+            For x As Integer = 0 To bIn.Width - 1
+                For y As Integer = 0 To bIn.Height - 1
+                    Dim a As Byte = Math.Min(bmask.GetPixel(x, y).R, bIn.GetPixel(x, y).A)
+                    'bframe.SetPixel(x, y, Color.FromArgb(a, 255, 255, 255))
+                    bOut.SetPixel(x, y, Color.FromArgb(a, a, a))
+                Next
+            Next
+
+            bmask.Dispose()
+        End Sub
+    End Class
+
+
+    Friend Class FrameProcessorHD_Matte
+        Inherits FrameProcessorHD
+
+        'Private Shared bmask As Bitmap
+        Private Shared mFn As String
+        Friend Shared Sub SetMask(maskFn As String)
+            mFn = maskFn
+
+        End Sub
+
+        Friend Sub New()
+            MyBase.New("")
+        End Sub
+
+        Friend Overrides Sub Proccess(ifn As IndexedFile)
+            Dim bHD As Bitmap = GetBitmap(ifn) ' New Bitmap(Parent.Dir + fn)
+            bHD.SetResolution(96, 96)
+
+            If bHD.Width <> sizeHD.Width OrElse bHD.Height <> sizeHD.Height Then bHD = Resize(bHD, sizeHD)
+            Dim bsave As New Bitmap(sizeHD.Width, sizeHD.Height, Imaging.PixelFormat.Format24bppRgb)
+            bsave.SetResolution(96, 96)
+            MakeMask(bHD, bsave)
+            'Dim bSave As Bitmap = bHD.Clone(New Rectangle(New Point(0, 0), sizeHD), Imaging.PixelFormat.Format24bppRgb)
+            bsave.SetResolution(96, 96)
+            bsave.Save(Parent.DirHD + ifn.Name)
+            'TargaFile.SaveAsTarga(Parent.DirHD + ifn.Name.ToLower.Replace(".png", ".tga"), bHD)
+            'TargaFile.SaveAsTarga($"{Parent.DirHD}fr{ifn.Index:00000}.tga", bSave)
+
+            bsave = Resize(bsave, sizePal) '720x576
+            Example(bsave, ifn.Index)
+
+            bHD.Dispose()
+            bsave.Dispose()
+        End Sub
+
+        Private Sub MakeMask(bIn As Bitmap, bOut As Bitmap)
+            For x As Integer = 0 To bIn.Width - 1
+                For y As Integer = 0 To bIn.Height - 1
+                    Dim a As Byte = bIn.GetPixel(x, y).A
+                    'bframe.SetPixel(x, y, Color.FromArgb(a, 255, 255, 255))
+                    bOut.SetPixel(x, y, Color.FromArgb(a, a, a))
+                Next
+            Next
         End Sub
     End Class
 

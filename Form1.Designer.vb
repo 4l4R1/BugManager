@@ -69,6 +69,8 @@ Partial Class Form1
         Me.TabPage3 = New System.Windows.Forms.TabPage()
         Me.grBug = New System.Windows.Forms.GroupBox()
         Me.gSelect = New System.Windows.Forms.GroupBox()
+        Me.rK11 = New System.Windows.Forms.RadioButton()
+        Me.rK2 = New System.Windows.Forms.RadioButton()
         Me.rEtc = New System.Windows.Forms.RadioButton()
         Me.rSk = New System.Windows.Forms.RadioButton()
         Me.rBug = New System.Windows.Forms.RadioButton()
@@ -87,7 +89,6 @@ Partial Class Form1
         Me.tDir = New System.Windows.Forms.TextBox()
         Me.bDir = New System.Windows.Forms.Button()
         Me.cVias = New System.Windows.Forms.ComboBox()
-        Me.rK2 = New System.Windows.Forms.RadioButton()
         Me.Tab1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.grCntrl.SuspendLayout()
@@ -256,7 +257,7 @@ Partial Class Form1
         '
         'bRestore
         '
-        Me.bRestore.Location = New System.Drawing.Point(6, 87)
+        Me.bRestore.Location = New System.Drawing.Point(6, 114)
         Me.bRestore.Name = "bRestore"
         Me.bRestore.Size = New System.Drawing.Size(87, 23)
         Me.bRestore.TabIndex = 33
@@ -285,7 +286,7 @@ Partial Class Form1
         '
         'bExmpl
         '
-        Me.bExmpl.Location = New System.Drawing.Point(6, 117)
+        Me.bExmpl.Location = New System.Drawing.Point(6, 64)
         Me.bExmpl.Name = "bExmpl"
         Me.bExmpl.Size = New System.Drawing.Size(71, 21)
         Me.bExmpl.TabIndex = 30
@@ -360,7 +361,7 @@ Partial Class Form1
         'Chk169
         '
         Me.Chk169.AutoSize = True
-        Me.Chk169.Location = New System.Drawing.Point(6, 45)
+        Me.Chk169.Location = New System.Drawing.Point(6, 41)
         Me.Chk169.Name = "Chk169"
         Me.Chk169.Size = New System.Drawing.Size(47, 17)
         Me.Chk169.TabIndex = 9
@@ -539,21 +540,44 @@ Partial Class Form1
         '
         'gSelect
         '
+        Me.gSelect.Controls.Add(Me.rK11)
         Me.gSelect.Controls.Add(Me.rK2)
         Me.gSelect.Controls.Add(Me.rEtc)
         Me.gSelect.Controls.Add(Me.rSk)
         Me.gSelect.Controls.Add(Me.rBug)
-        Me.gSelect.Location = New System.Drawing.Point(242, 101)
+        Me.gSelect.Location = New System.Drawing.Point(143, 101)
         Me.gSelect.Name = "gSelect"
-        Me.gSelect.Size = New System.Drawing.Size(227, 37)
+        Me.gSelect.Size = New System.Drawing.Size(326, 37)
         Me.gSelect.TabIndex = 36
         Me.gSelect.TabStop = False
         Me.gSelect.Text = "Renderduse tüüp"
         '
+        'rK11
+        '
+        Me.rK11.AutoSize = True
+        Me.rK11.Location = New System.Drawing.Point(157, 14)
+        Me.rK11.Name = "rK11"
+        Me.rK11.Size = New System.Drawing.Size(66, 17)
+        Me.rK11.TabIndex = 36
+        Me.rK11.TabStop = True
+        Me.rK11.Text = "k11 logo"
+        Me.rK11.UseVisualStyleBackColor = True
+        '
+        'rK2
+        '
+        Me.rK2.AutoSize = True
+        Me.rK2.Location = New System.Drawing.Point(101, 14)
+        Me.rK2.Name = "rK2"
+        Me.rK2.Size = New System.Drawing.Size(60, 17)
+        Me.rK2.TabIndex = 35
+        Me.rK2.TabStop = True
+        Me.rK2.Text = "k2 logo"
+        Me.rK2.UseVisualStyleBackColor = True
+        '
         'rEtc
         '
         Me.rEtc.AutoSize = True
-        Me.rEtc.Location = New System.Drawing.Point(181, 14)
+        Me.rEtc.Location = New System.Drawing.Point(280, 14)
         Me.rEtc.Name = "rEtc"
         Me.rEtc.Size = New System.Drawing.Size(40, 17)
         Me.rEtc.TabIndex = 34
@@ -596,7 +620,7 @@ Partial Class Form1
         '
         'bExmplMaker
         '
-        Me.bExmplMaker.Location = New System.Drawing.Point(6, 117)
+        Me.bExmplMaker.Location = New System.Drawing.Point(6, 64)
         Me.bExmplMaker.Name = "bExmplMaker"
         Me.bExmplMaker.Size = New System.Drawing.Size(71, 21)
         Me.bExmplMaker.TabIndex = 34
@@ -608,7 +632,7 @@ Partial Class Form1
         Me.gAlign.Controls.Add(Me.rRight)
         Me.gAlign.Controls.Add(Me.rCenter)
         Me.gAlign.Controls.Add(Me.rLeft)
-        Me.gAlign.Location = New System.Drawing.Point(88, 101)
+        Me.gAlign.Location = New System.Drawing.Point(6, 101)
         Me.gAlign.Name = "gAlign"
         Me.gAlign.Size = New System.Drawing.Size(132, 37)
         Me.gAlign.TabIndex = 31
@@ -735,17 +759,6 @@ Partial Class Form1
         Me.cVias.Size = New System.Drawing.Size(199, 21)
         Me.cVias.TabIndex = 11
         '
-        'rK2
-        '
-        Me.rK2.AutoSize = True
-        Me.rK2.Location = New System.Drawing.Point(101, 14)
-        Me.rK2.Name = "rK2"
-        Me.rK2.Size = New System.Drawing.Size(60, 17)
-        Me.rK2.TabIndex = 35
-        Me.rK2.TabStop = True
-        Me.rK2.Text = "k2 logo"
-        Me.rK2.UseVisualStyleBackColor = True
-        '
         'Form1
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -846,4 +859,5 @@ Partial Class Form1
     Friend WithEvents rSk As RadioButton
     Friend WithEvents rBug As RadioButton
     Friend WithEvents rK2 As RadioButton
+    Friend WithEvents rK11 As RadioButton
 End Class

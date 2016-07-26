@@ -87,7 +87,9 @@ Module htmlClasses
             '_html.Append(System.Environment.NewLine)
 
             '_html.Append(Space(6))
-            _html.Append(<td style='font-size: 14px; vertical-align: bottom;'><%= content.@time %></td>.ToString)
+
+            '_html.Append(<td style='font-size: 14px; vertical-align: bottom;'><%= content.@time %></td>.ToString)
+            _html.Append(<td style='font-size: 14px; vertical-align: bottom;'><%= Date.Parse(content.@time).ToString("dd.MM.yy HH:mm:ss") %></td>.ToString)
             '_html.Append(System.Environment.NewLine)
 
             If RowMode = 1 Then
